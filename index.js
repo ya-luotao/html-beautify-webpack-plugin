@@ -3,7 +3,7 @@ const _ = require('lodash')
 const chalk = require('chalk')
 const assert = require('assert')
 const beautify = require('js-beautify').html
-const HtmlBeautifyPlugin = require('html-beautify-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webpackLatest = !_.isNil(webpack.version) && /.*4(\.\d+){0,2}/gi.test(webpack.version)
 
 function HtmlBeautifyPlugin ({ config = {}, replace } = { config: {}, replace: [] }) {

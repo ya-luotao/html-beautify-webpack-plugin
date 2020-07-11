@@ -3,6 +3,7 @@ const _ = require('lodash')
 const chalk = require('chalk')
 const assert = require('assert')
 const beautify = require('js-beautify').html
+const HtmlBeautifyPlugin = require('html-beautify-webpack-plugin')
 const webpackLatest = !_.isNil(webpack.version) && /.*4(\.\d+){0,2}/gi.test(webpack.version)
 
 function HtmlBeautifyPlugin ({ config = {}, replace } = { config: {}, replace: [] }) {
@@ -42,11 +43,13 @@ HtmlBeautifyPlugin.prototype.apply = function (compiler) {
             })
         )
     } else {
-        compiler.hooks.compilation.tap('HtmlBeautifyPlugin', compilation =>
-            compilation.hooks.htmlWebpackPluginAfterHtmlProcessing.tapAsync('HtmlBeautifyPlugin', (htmlPluginData, callback) => {
-                htmlPluginDataFunction(htmlPluginData, callback, this)
-            })
-        )
+        compiler.hooks.compilation.tap('HtmlBeautifyPlugin', compilation => {
+			const beforeEmit = compilation.hooks.htmlWebpackPluginAfterHtmlProcessing ||
+        		HtmlWebpackPlugin.getHooks(compilation).beforeEmit;
+			beforeEmit.tapAsync('HtmlBeautifyPlugin', (htmlPluginData, callback) => {
+        		htmlPluginDataFunction(htmlPluginData, callback, this)
+        	})
+	   	})
     }
 }
 
